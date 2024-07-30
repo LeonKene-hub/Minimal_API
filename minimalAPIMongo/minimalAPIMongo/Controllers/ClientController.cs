@@ -12,10 +12,12 @@ namespace minimalAPIMongo.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IMongoCollection<Client>? _client;
+        private readonly IMongoCollection<User>? _user;
 
         public ClientController(MongoDbService mongoDbService)
         {
             _client = mongoDbService.GetDatabase.GetCollection<Client>("client");
+            _user = mongoDbService.GetDatabase.GetCollection<User>("user");
         }
 
         [HttpGet]
@@ -38,6 +40,7 @@ namespace minimalAPIMongo.Controllers
             try
             {
                 var clientFinded = await _client.Find(c => c.Id == id).FirstOrDefaultAsync();
+
                 return clientFinded is not null ? Ok(clientFinded) : NotFound(); 
             }
             catch (Exception e)
@@ -51,7 +54,18 @@ namespace minimalAPIMongo.Controllers
         {
             try
             {
-                await _client.InsertOneAsync(novoClient);
+                var userFinded = await _user.Find(u => u.Id == novoClient.UserId).FirstOrDefaultAsync();
+
+                if (userFinded is not null) 
+                {
+                    novoClient.user = userFinded;
+                    await _client.InsertOneAsync(novoClient);
+                }
+                else 
+                { 
+                    return NotFound("O ID de usuario informado não existe");
+                }
+                
                 return StatusCode(201);
             }
             catch (Exception e)

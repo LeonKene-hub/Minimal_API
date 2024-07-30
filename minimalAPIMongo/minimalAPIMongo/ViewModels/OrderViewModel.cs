@@ -1,13 +1,14 @@
-﻿using MongoDB.Bson;
+﻿using minimalAPIMongo.Domains;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 using System.Text.Json.Serialization;
 
-namespace minimalAPIMongo.Domains
+namespace minimalAPIMongo.ViewModels
 {
-    public class Order
+    public class OrderViewModel
     {
         [BsonId]
-        [BsonElement("_id"),BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
         [BsonElement("date")]
@@ -16,20 +17,18 @@ namespace minimalAPIMongo.Domains
         [BsonElement("status")]
         public string? Status { get; set; }
 
-        //refenrecia aos produtos por meio de ids
         [BsonElement("productId")]
-        [JsonIgnore]
         public List<string>? ProductId { get; set; }
 
-        //referencia para que quando eu liste os pedidos, venha os dados de cada produto(lista)
-        [BsonElement("product")]
+        [BsonIgnore]
+        [JsonIgnore]
         public List<Product>? Products { get; set; }
 
-        //quem faz a compra
         [BsonElement("clientId")]
         public string? ClientId { get; set; }
 
-        [BsonElement("client")]
+        [BsonIgnore]
+        [JsonIgnore]
         public Client? Client { get; set; }
     }
 }
