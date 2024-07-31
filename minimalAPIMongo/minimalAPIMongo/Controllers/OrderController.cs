@@ -28,6 +28,7 @@ namespace minimalAPIMongo.Controllers
         {
             try
             {
+
                 var orders = await _order.Find(FilterDefinition<Order>.Empty).ToListAsync();
                 return Ok(orders);
             }

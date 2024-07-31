@@ -61,8 +61,8 @@ namespace minimalAPIMongo.Controllers
                     novoClient.user = userFinded;
                     await _client.InsertOneAsync(novoClient);
                 }
-                else 
-                { 
+                else
+                {
                     return NotFound("O ID de usuario informado não existe");
                 }
                 
